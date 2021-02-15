@@ -2,10 +2,27 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   alias Homework.Users
 
   @doc """
+  Get a user by id
+  """
+  def user(_parent, %{id: id}, _resolution) do
+    case Users.get_user!(id) do
+      nil ->
+        {:error, "User ID #{id} not found"}
+      user ->
+        {:ok, user}
+    end
+  end
+
+  @doc """
   Get a list of users
   """
   def users(_root, args, _info) do
-    {:ok, Users.list_users(args)}
+    cond do
+      Map.has_key?(args, :first_name) && Map.has_key?(args, :last_name) ->
+        {:ok, Users.list_users_by_name(args)}
+      true ->
+        {:ok, Users.list_users(args)}
+    end
   end
 
   @doc """
