@@ -8,6 +8,24 @@ defmodule Homework.Transactions do
 
   alias Homework.Transactions.Transaction
 
+  def convert_to_decimal(transactions) do
+    Enum.map(transactions, fn t ->
+      amount = Map.get(t, :amount)
+      a = Float.round(amount/100, 2)
+      Map.put(t, :amount, a)
+    end)
+  end
+
+  def convert_to_integer(t) do
+    IO.puts(:stdio, "HELLO")
+    IO.inspect(:stdio, t, [])
+    amount = Map.get(t, :amount)
+    IO.puts(:stdio, amount)
+    a = round(amount*100)
+    IO.puts(:stdio, a)
+    Map.put(t, :amount, a)
+  end
+
   @doc """
   Returns the list of transactions.
 
@@ -19,6 +37,7 @@ defmodule Homework.Transactions do
   """
   def list_transactions(_args) do
     Repo.all(Transaction)
+    |> convert_to_decimal()
   end
 
   @doc """
@@ -34,6 +53,7 @@ defmodule Homework.Transactions do
     query = from t in Transaction,
             where: t.inserted_at > ago(^days, "day")
     Repo.all(query)
+    |> convert_to_decimal()
   end
 
   @doc """
@@ -49,6 +69,7 @@ defmodule Homework.Transactions do
     query = from t in Transaction,
             where: t.amount > ^min and t.amount < ^max
     Repo.all(query)
+    |> convert_to_decimal()
   end
 
   @doc """
@@ -65,7 +86,10 @@ defmodule Homework.Transactions do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transaction!(id), do: Repo.get!(Transaction, id)
+  def get_transaction!(id) do
+    Repo.get!(Transaction, id)
+    |> convert_to_decimal()
+  end
 
   @doc """
   Creates a transaction.
@@ -80,8 +104,9 @@ defmodule Homework.Transactions do
 
   """
   def create_transaction(attrs \\ %{}) do
+    new_attrs = convert_to_integer(attrs)
     %Transaction{}
-    |> Transaction.changeset(attrs)
+    |> Transaction.changeset(new_attrs)
     |> Repo.insert()
   end
 
@@ -98,8 +123,9 @@ defmodule Homework.Transactions do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
+    new_attrs = convert_to_integer(attrs)
     transaction
-    |> Transaction.changeset(attrs)
+    |> Transaction.changeset(new_attrs)
     |> Repo.update()
   end
 
