@@ -22,6 +22,36 @@ defmodule Homework.Transactions do
   end
 
   @doc """
+  Returns the list of transactions for the last 30 days.
+
+  ## Examples
+
+      iex> list_transactions([])
+      [%Transaction{}, ...]
+
+  """
+  def list_transactions_since(%{days: days}) do
+    query = from t in Transaction,
+            where: t.inserted_at > ago(^days, "day")
+    Repo.all(query)
+  end
+
+  @doc """
+  Returns the list of transactions between min and max amounts.
+
+  ## Examples
+
+      iex> list_transactions([])
+      [%Transaction{}, ...]
+
+  """
+  def list_transactions_min_max(%{min: min, max: max}) do
+    query = from t in Transaction,
+            where: t.amount > ^min and t.amount < ^max
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single transaction.
 
   Raises `Ecto.NoResultsError` if the Transaction does not exist.

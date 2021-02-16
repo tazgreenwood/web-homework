@@ -22,6 +22,21 @@ defmodule Homework.Merchants do
   end
 
   @doc """
+  Returns the list of merchants by name.
+
+  ## Examples
+
+      iex> list_merchants([])
+      [%Merchant{}, ...]
+
+  """
+  def list_merchants_by_name(%{name: name}) do
+    query = from m in Merchant,
+            where: ilike(m.name, ^"%#{name}%")
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single merchant.
 
   Raises `Ecto.NoResultsError` if the Merchant does not exist.

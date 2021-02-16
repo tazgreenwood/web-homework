@@ -7,7 +7,14 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Get a list of transcations
   """
   def transactions(_root, args, _info) do
-    {:ok, Transactions.list_transactions(args)}
+    cond do
+      Map.has_key?(args, :days) ->
+        {:ok, Transactions.list_transactions_since(args)}
+      Map.has_key?(args, :min) && Map.has_key?(args, :max) ->
+        {:ok, Transactions.list_transactions_min_max(args)}
+      true ->
+        {:ok, Transactions.list_transactions(args)}
+    end
   end
 
   @doc """
