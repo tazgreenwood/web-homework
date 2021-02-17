@@ -16,6 +16,12 @@ defmodule Homework.Transactions do
     end)
   end
 
+  def convert_single_decimal(t) do
+    amount = Map.get(t, :amount)
+    a = Float.round(amount/100, 2)
+    Map.put(t, :amount, a)
+  end
+
   def convert_to_integer(t) do
     amount = Map.get(t, :amount)
     a = round(amount*100)
@@ -114,7 +120,7 @@ defmodule Homework.Transactions do
   """
   def get_transaction!(id) do
     Repo.get!(Transaction, id)
-    |> convert_to_decimal()
+    |> convert_single_decimal()
   end
 
   @doc """

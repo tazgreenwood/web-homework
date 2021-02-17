@@ -10,6 +10,12 @@ defmodule HomeworkWeb.Schema do
   import_types(HomeworkWeb.Schemas.Types)
 
   query do
+    @desc "Get a transaction by id"
+    field(:transaction, :transaction) do
+      arg :id, non_null(:id)
+      resolve(&TransactionsResolver.transaction/3)
+    end
+
     @desc "Get all Transactions"
     field(:transactions, list_of(:transaction)) do
       arg(:days, :integer)
