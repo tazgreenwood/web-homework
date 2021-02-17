@@ -17,12 +17,8 @@ defmodule Homework.Transactions do
   end
 
   def convert_to_integer(t) do
-    IO.puts(:stdio, "HELLO")
-    IO.inspect(:stdio, t, [])
     amount = Map.get(t, :amount)
-    IO.puts(:stdio, amount)
     a = round(amount*100)
-    IO.puts(:stdio, a)
     Map.put(t, :amount, a)
   end
 
@@ -38,6 +34,36 @@ defmodule Homework.Transactions do
   def list_transactions(_args) do
     Repo.all(Transaction)
     |> convert_to_decimal()
+  end
+
+  @doc """
+  Returns the count of transactions.
+
+  ## Examples
+
+      iex> list_transactions([])
+      [%Transactions{}, ...]
+
+  """
+  def get_transaction_count(_args) do
+    query = from t in Transaction, select: count(t.id, :distinct)
+    Repo.one(query)
+  end
+
+    @doc """
+  Returns the list of transactions with pagination.
+
+  ## Examples
+
+      iex> list_transactions([])
+      [%Transactions{}, ...]
+
+  """
+  def list_transactions_pagination(%{limit: limit, skip: skip}) do
+    Transaction
+    |> limit(^limit)
+    |> offset(^skip)
+    |> Repo.all()
   end
 
   @doc """

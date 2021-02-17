@@ -12,6 +12,10 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
     field(:description, :string)
     field(:inserted_at, :naive_datetime)
     field(:updated_at, :naive_datetime)
+
+    field(:count, :integer) do
+      resolve(&MerchantsResolver.count/3)
+    end
   end
 
   object :merchant_mutations do

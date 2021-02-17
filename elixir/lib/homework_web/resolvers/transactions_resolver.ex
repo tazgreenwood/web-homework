@@ -4,6 +4,13 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   alias Homework.Users
 
   @doc """
+  Get count of transactions rows
+  """
+  def count(_root, args, _info) do
+    {:ok, Transactions.get_transaction_count(args)}
+  end
+
+  @doc """
   Get a list of transcations
   """
   def transactions(_root, args, _info) do
@@ -12,6 +19,8 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
         {:ok, Transactions.list_transactions_since(args)}
       Map.has_key?(args, :min) && Map.has_key?(args, :max) ->
         {:ok, Transactions.list_transactions_min_max(args)}
+      Map.has_key?(args, :limit) && Map.has_key?(args, :skip) ->
+        {:ok, Transactions.list_transactions_pagination(args)}
       true ->
         {:ok, Transactions.list_transactions(args)}
     end

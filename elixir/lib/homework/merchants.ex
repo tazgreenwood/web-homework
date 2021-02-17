@@ -22,6 +22,36 @@ defmodule Homework.Merchants do
   end
 
   @doc """
+  Returns the count of merchants.
+
+  ## Examples
+
+      iex> list_merchants([])
+      [%Merchant{}, ...]
+
+  """
+  def get_merchant_count(_args) do
+    query = from m in Merchant, select: count(m.id, :distinct)
+    Repo.one(query)
+  end
+
+    @doc """
+  Returns the list of merchants with pagination.
+
+  ## Examples
+
+      iex> list_merchants([])
+      [%Merchant{}, ...]
+
+  """
+  def list_merchants_pagination(%{limit: limit, skip: skip}) do
+    Merchant
+    |> limit(^limit)
+    |> offset(^skip)
+    |> Repo.all()
+  end
+
+  @doc """
   Returns the list of merchants by name.
 
   ## Examples

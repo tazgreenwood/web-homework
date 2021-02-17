@@ -1,10 +1,18 @@
 defmodule HomeworkWeb.Resolvers.MerchantsResolver do
   alias Homework.Merchants
+
   @doc """
-  Get a merchant by id
+  Get merchant by id
   """
   def merchant(_root, %{id: id}, _info) do
     {:ok, Merchants.get_merchant!(id)}
+  end
+
+  @doc """
+  Get count of merchants rows
+  """
+  def count(_root, args, _info) do
+    {:ok, Merchants.get_merchant_count(args)}
   end
 
   @doc """
@@ -14,6 +22,8 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
     cond do
       Map.has_key?(args, :name) ->
         {:ok, Merchants.list_merchants_by_name(args)}
+      Map.has_key?(args, :limit) && Map.has_key?(args, :skip) ->
+        {:ok, Merchants.list_merchants_pagination(args)}
       true ->
         {:ok, Merchants.list_merchants(args)}
     end

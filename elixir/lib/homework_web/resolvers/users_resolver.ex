@@ -2,6 +2,13 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   alias Homework.Users
 
   @doc """
+  Get count of users rows
+  """
+  def count(_root, args, _info) do
+    {:ok, Users.get_user_count(args)}
+  end
+
+  @doc """
   Get a user by id
   """
   def user(_parent, %{id: id}, _resolution) do
@@ -20,6 +27,8 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
     cond do
       Map.has_key?(args, :first_name) && Map.has_key?(args, :last_name) ->
         {:ok, Users.list_users_by_name(args)}
+      Map.has_key?(args, :limit) && Map.has_key?(args, :skip) ->
+        {:ok, Users.list_users_pagination(args)}
       true ->
         {:ok, Users.list_users(args)}
     end

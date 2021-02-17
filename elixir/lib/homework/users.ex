@@ -22,6 +22,37 @@ defmodule Homework.Users do
   end
 
   @doc """
+  Returns the count of users.
+
+  ## Examples
+
+      iex> list_users([])
+      [%User{}, ...]
+
+  """
+  def get_user_count(_args) do
+    query = from t in User, select: count(t.id, :distinct)
+    Repo.one(query)
+  end
+
+    @doc """
+  Returns the list of users with pagination.
+
+  ## Examples
+
+      iex> list_users([])
+      [%User{}, ...]
+
+  """
+  def list_users_pagination(%{limit: limit, skip: skip}) do
+    User
+    |> limit(^limit)
+    |> offset(^skip)
+    |> Repo.all()
+  end
+
+
+  @doc """
   Returns the list of users that match name.
 
   ## Examples

@@ -15,6 +15,8 @@ defmodule HomeworkWeb.Schema do
       arg(:days, :integer)
       arg(:min, :integer)
       arg(:max, :integer)
+      arg(:limit, :integer)
+      arg(:skip, :integer)
       resolve(&TransactionsResolver.transactions/3)
     end
 
@@ -22,6 +24,8 @@ defmodule HomeworkWeb.Schema do
     field(:users, list_of(:user)) do
       arg(:first_name, :string)
       arg(:last_name, :string)
+      arg(:limit, :integer)
+      arg(:skip, :integer)
       resolve(&UsersResolver.users/3)
     end
 
@@ -40,6 +44,8 @@ defmodule HomeworkWeb.Schema do
     @desc "Get all Merchants"
     field(:merchants, list_of(:merchant)) do
       arg(:name, :string)
+      arg(:limit, :integer)
+      arg(:skip, :integer)
       resolve(&MerchantsResolver.merchants/3)
     end
   end
